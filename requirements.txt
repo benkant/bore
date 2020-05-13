@@ -1,2 +1,8 @@
 # For a nicer terminal
 ipython
+
+# plotting
+matplotlib
+
+# formatting
+black
