@@ -1,0 +1,47 @@
+# Example C++ makefile
+#
+# Use the C++17 standard
+# Turn on all warning messages
+# Compile in debug mode
+# Warn on memory use-after-free bugs and other memory issues with ASan.
+# 	If you see an unusual message or segfault, it’s likely ASan picking
+# 	up a use-after-free or use of uninitialized memory bug in your code.
+# Link the pthread library
+# Link a few static boost libraries
+#
+# Boost is provided, with most of its header-only libraries working
+# 	straight out of the box. Of its statically compiled components, we 
+# 	link to DateTime, Regex, System, Thread, and Timer
+# nlohmann/json, a convenient and simple JSON library.
+# Catch, a C++ testing library.
+# Eigen, a library for linear algebra.
+
+appname := myapp
+
+CXX := g++
+CXXFLAGS := -Wall -g -std=c++17 -fsanitize=address -pthread
+LDFLAGS := -g
+LDLIBS := -lboost_date_time -lboost_regex -lboost_system -lboost_thread -lboost_timer -lboost_filesystem \
+-lssl -lcrypto
+
+srcfiles := $(shell find . -name "*.cc")
+objects  := $(patsubst %.cc, %.o, $(srcfiles))
+
+all: $(appname)
+
+$(appname): $(objects)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(appname) $(objects) $(LDLIBS)
+
+depend: .depend
+
+.depend: $(srcfiles)
+	rm -f ./.depend
+	$(CXX) $(CXXFLAGS) -MM $^>>./.depend;
+
+clean:
+	rm -f $(objects)
+
+dist-clean: clean
+	rm -f *~ .depend
+
+include .depend

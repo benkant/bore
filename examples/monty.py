@@ -1,11 +1,20 @@
-## Whitespace Formatting
+# Type hints
+# type: ignore
 
-# The pound sign marks the start of a comment. Python itself
-# ignores the comments, but they're helpful for anyone reading the code.
-for i in [1, 2, 3, 4, 5]:
-    print(i)  # first line in "for i" block
-    for j in [1, 2, 3, 4, 5]:
-        print(j)  # first line in "for j" block
-        print(i + j)  # last line in "for j" block
-    print(i)  # last line in "for i" block
-print("done looping")
+# Importing
+import re as regex
+import matplotlib.pyplot as plt
+
+# Muliline strings
+s = """9noop9
+afoo999
+abar9001"""
+
+# Regular expressions
+my_regex = regex.compile("^[a-z](.*?)\d(3,)$", regex.I | regex.M)
+
+# Looping and iterators
+for my_match in my_regex.finditer(s):
+    print(my_match.group(1))
+
+    

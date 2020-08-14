@@ -1,0 +1,39 @@
+# Example C makefile
+#
+# Use the C11 standard
+# Turn on all warning messages
+# Compile in debug mode
+# Warn on memory use-after-free bugs and other memory issues with ASan.
+# 	If you see an unusual message or segfault, it’s likely ASan picking
+# 	up a use-after-free or use of uninitialized memory bug in your code.
+# Link the pthread library
+# Link maths library
+
+appname := myapp
+
+CC := g++
+CFLAGS := -g -fsanitize=address -std=c11 -Wall -fdiagnostics-color -pthread
+LDFLAGS := -g
+LDLIBS := -lm
+
+srcfiles := $(shell find . -name "*.c")
+objects  := $(patsubst %.c, %.o, $(srcfiles))
+
+all: $(appname)
+
+$(appname): $(objects)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(appname) $(objects) $(LDLIBS)
+
+depend: .depend
+
+.depend: $(srcfiles)
+	rm -f ./.depend
+	$(CC) $(CFLAGS) -MM $^>>./.depend;
+
+clean:
+	rm -f $(objects)
+
+dist-clean: clean
+	rm -f *~ .depend
+
+include .depend
